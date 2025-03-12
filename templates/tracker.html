@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Leaflet CSS for maps -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>GPS Location Tracker</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="{{ url_for('laws') }}"><i class="fas fa-gavel"></i> Laws</a></li>
+                    <li><a href="{{ url_for('news') }}"><i class="fas fa-newspaper"></i> News</a></li>
+                    <li><a href="{{ url_for('resources') }}"><i class="fas fa-hands-helping"></i> Resources</a></li>
+                    <li><a href="{{ url_for('safety_tips') }}"><i class="fas fa-shield-alt"></i> Safety Tips</a></li>
+
+                    <li><a href="{{ url_for('tracker') }}" class="active"><i class="fas fa-map-marker-alt"></i> GPS Tracker</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="tracker-intro">
+            <h2>Stay Safe with Location Tracking</h2>
+            <p>Share your location with trusted contacts in emergency situations or when you feel unsafe.</p>
+        </section>
+
+        <div class="tracker-container">
+            <div class="tracker-map-container">
+                <div id="map"></div>
+                <div class="map-status" id="map-status">
+                    <i class="fas fa-circle-notch fa-spin"></i> Getting your location...
+                </div>
+            </div>
+
+            <div class="tracker-controls">
+                <div class="location-details">
+                    <h3>Your Current Location</h3>
+                    <div class="location-info">
+                        <p><strong>Latitude:</strong> <span id="latitude">--.----</span></p>
+                        <p><strong>Longitude:</strong> <span id="longitude">--.----</span></p>
+                        <p><strong>Address:</strong> <span id="address">Locating...</span></p>
+                        <p><strong>Last Updated:</strong> <span id="timestamp">--:--:--</span></p>
+                    </div>
+                    <button id="refreshLocation" class="tracker-btn primary-btn">
+                        <i class="fas fa-sync-alt"></i> Refresh Location
+                    </button>
+                </div>
+
+                <div class="share-location">
+                    <h3>Share Your Location</h3>
+                    <div class="emergency-contacts-list">
+                        <div class="contact-selection">
+                            <label for="contactSelect">Select Emergency Contact:</label>
+                            <select id="contactSelect">
+                                <option value="">Choose a contact...</option>
+                                <option value="contact1">Mom</option>
+                                <option value="contact2">Dad</option>
+                                <option value="contact3">Sister</option>
+                                <option value="contact4">Friend</option>
+                                <option value="custom">Add New Contact</option>
+                            </select>
+                        </div>
+                        
+                        <div id="newContactForm" class="new-contact-form" style="display: none;">
+                            <input type="text" id="contactName" placeholder="Contact Name">
+                            <input type="tel" id="contactNumber" placeholder="Contact Number">
+                            <button id="saveContact" class="save-contact-btn">
+                                <i class="fas fa-save"></i> Save
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="sharing-options">
+                        <button id="shareLocationSMS" class="tracker-btn share-btn">
+                            <i class="fas fa-sms"></i> Share via SMS
+                        </button>
+                        <button id="shareLocationWhatsApp" class="tracker-btn share-btn">
+                            <i class="fab fa-whatsapp"></i> Share via WhatsApp
+                        </button>
+                        <button id="copyLocationLink" class="tracker-btn share-btn">
+                            <i class="fas fa-copy"></i> Copy Location Link
+                        </button>
+                    </div>
+                </div>
+
+                <div class="emergency-mode">
+                    <h3>Emergency Features</h3>
+                    <div class="emergency-buttons">
+                        <button id="startTracking" class="tracker-btn emergency-btn">
+                            <i class="fas fa-broadcast-tower"></i> Start Live Tracking
+                        </button>
+                        <button id="stopTracking" class="tracker-btn emergency-btn" disabled>
+                            <i class="fas fa-stop-circle"></i> Stop Tracking
+                        </button>
+                        <button id="panicButton" class="tracker-btn panic-btn">
+                            <i class="fas fa-exclamation-triangle"></i> SOS Alert
+                        </button>
+                    </div>
+                    <div class="tracking-status" id="trackingStatus">
+                        Tracking inactive
+                    </div>
+                </div>
+                
+                <div class="safe-zone">
+                    <h3>Safe Zone Settings</h3>
+                    <div class="safe-zone-controls">
+                        <button id="addSafeZone" class="tracker-btn">
+                            <i class="fas fa-plus-circle"></i> Add Safe Zone
+                        </button>
+                        <button id="viewSafeZones" class="tracker-btn">
+                            <i class="fas fa-eye"></i> View Safe Zones
+                        </button>
+                        <div class="safe-zone-info">
+                            <p>Set up safe zones to receive alerts when you enter or leave designated areas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="alertModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h3 id="modalTitle">Alert</h3>
+                <p id="modalMessage">This is an alert message.</p>
+                <div class="modal-buttons">
+                    <button id="modalPrimaryBtn" class="tracker-btn primary-btn">OK</button>
+                    <button id="modalSecondaryBtn" class="tracker-btn secondary-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Women Safety App. All rights reserved.</p>
+    </footer>
+
+    <!-- Leaflet JS for maps -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <script>
+        // Map initialization
+        let map, marker, watchId;
+        let isTracking = false;
+        
+        // Initialize map with default view
+        function initMap() {
+            map = L.map('map').setView([20.5937, 78.9629], 5); // Default to India
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            // Try to get user's location
+            getLocation();
+        }
+
+        // Get current location
+        function getLocation() {
+            document.getElementById('map-status').style.display = 'block';
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    showPosition, 
+                    handleLocationError, 
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                document.getElementById('map-status').innerHTML = 
+                    '<i class="fas fa-exclamation-triangle"></i> Geolocation is not supported by this browser.';
+            }
+        }
+
+        // Display position on map
+        function showPosition(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            
+            // Update location info
+            document.getElementById('latitude').textContent = lat.toFixed(6);
+            document.getElementById('longitude').textContent = lng.toFixed(6);
+            document.getElementById('timestamp').textContent = new Date().toLocaleTimeString();
+            
+            // Update map and marker
+            map.setView([lat, lng], 15);
+            
+            if (marker) {
+                marker.setLatLng([lat, lng]);
+            } else {
+                marker = L.marker([lat, lng]).addTo(map)
+                    .bindPopup("Your current location").openPopup();
+            }
+            
+            // Get address from coordinates
+            reverseGeocode(lat, lng);
+            
+            document.getElementById('map-status').style.display = 'none';
+        }
+
+        // Handle location errors
+        function handleLocationError(error) {
+            let errorMessage;
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = "Location access denied. Please enable location services.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = "The request to get location timed out.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    errorMessage = "An unknown error occurred.";
+                    break;
+            }
+            
+            document.getElementById('map-status').innerHTML = 
+                `<i class="fas fa-exclamation-triangle"></i> ${errorMessage}`;
+        }
+
+        // Reverse geocoding function (simplified mock)
+        function reverseGeocode(lat, lng) {
+            document.getElementById('address').textContent = "Fetching address...";
+            
+            // In a real app, you would call a geocoding API
+            // For demo purposes, we'll just set a sample address after a timeout
+            setTimeout(() => {
+                document.getElementById('address').textContent = 
+                    "Sample Address, Near Landmark, City, State, PIN";
+            }, 1000);
+        }
+
+        // Start location tracking
+        function startTracking() {
+            if (navigator.geolocation) {
+                document.getElementById('trackingStatus').innerHTML = 
+                    '<i class="fas fa-broadcast-tower"></i> Live tracking active';
+                document.getElementById('trackingStatus').className = 'tracking-status active';
+                
+                document.getElementById('startTracking').disabled = true;
+                document.getElementById('stopTracking').disabled = false;
+                
+                isTracking = true;
+                
+                // Start watching position
+                watchId = navigator.geolocation.watchPosition(
+                    showPosition,
+                    handleLocationError,
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+                
+                showAlert('Tracking Started', 'Live location tracking is now active. Your emergency contacts will receive location updates.');
+            }
+        }
+
+        // Stop location tracking
+        function stopTracking() {
+            if (watchId) {
+                navigator.geolocation.clearWatch(watchId);
+                watchId = null;
+                isTracking = false;
+                
+                document.getElementById('trackingStatus').innerHTML = 'Tracking inactive';
+                document.getElementById('trackingStatus').className = 'tracking-status';
+                
+                document.getElementById('startTracking').disabled = false;
+                document.getElementById('stopTracking').disabled = true;
+                
+                showAlert('Tracking Stopped', 'Live location tracking has been stopped.');
+            }
+        }
+
+        // Share location via SMS (mock)
+        function shareLocationSMS() {
+            const selectedContact = document.getElementById('contactSelect').value;
+            
+            if (!selectedContact) {
+                showAlert('No Contact Selected', 'Please select a contact to share your location with.');
+                return;
+            }
+            
+            const lat = document.getElementById('latitude').textContent;
+            const lng = document.getElementById('longitude').textContent;
+            
+            if (lat === '--.----' || lng === '--.----') {
+                showAlert('Location Not Available', 'Please wait for your location to be detected or refresh the location.');
+                return;
+            }
+            
+            // Create Google Maps link
+            const locationLink = `https://maps.google.com/maps?q=${lat},${lng}`;
+            
+            // In a real app, this would integrate with the SMS API
+            showAlert('SMS Sent', 'Your location has been shared via SMS with your emergency contact.', 'Close');
+        }
+
+        // Share location via WhatsApp (mock)
+        function shareLocationWhatsApp() {
+            const lat = document.getElementById('latitude').textContent;
+            const lng = document.getElementById('longitude').textContent;
+            
+            if (lat === '--.----' || lng === '--.----') {
+                showAlert('Location Not Available', 'Please wait for your location to be detected or refresh the location.');
+                return;
+            }
+            
+            // Create Google Maps link
+            const locationLink = `https://maps.google.com/maps?q=${lat},${lng}`;
+            const message = encodeURIComponent(`My current location: ${locationLink}`);
+            
+            // Create WhatsApp link (would open WhatsApp in a real implementation)
+            // window.open(`https://wa.me/?text=${message}`);
+            
+            showAlert('WhatsApp', 'Your location is ready to share via WhatsApp.', 'Open WhatsApp', 'Cancel');
+        }
+
+        // Copy location link to clipboard
+        function copyLocationLink() {
+            const lat = document.getElementById('latitude').textContent;
+            const lng = document.getElementById('longitude').textContent;
+            
+            if (lat === '--.----' || lng === '--.----') {
+                showAlert('Location Not Available', 'Please wait for your location to be detected or refresh the location.');
+                return;
+            }
+            
+            // Create Google Maps link
+            const locationLink = `https://maps.google.com/maps?q=${lat},${lng}`;
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(locationLink).then(() => {
+                showAlert('Copied!', 'Location link copied to clipboard.');
+            }).catch(err => {
+                showAlert('Error', 'Failed to copy location link. Please try again.');
+            });
+        }
+
+        // Trigger SOS alert
+        function triggerSOS() {
+            showAlert(
+                'SOS Alert', 
+                'Are you sure you want to send an emergency SOS alert with your location to all your emergency contacts?',
+                'Send SOS',
+                'Cancel',
+                () => {
+                    // Code to execute if they confirm the SOS alert
+                    const lat = document.getElementById('latitude').textContent;
+                    const lng = document.getElementById('longitude').textContent;
+                    
+                    // In a real app, this would send alerts to emergency contacts
+                    document.getElementById('map-status').innerHTML = 
+                        '<i class="fas fa-exclamation-triangle"></i> SOS alert sent! Help is on the way.';
+                    document.getElementById('map-status').style.display = 'block';
+                    document.getElementById('map-status').className = 'map-status sos-active';
+                    
+                    // Start tracking if not already active
+                    if (!isTracking) {
+                        startTracking();
+                    }
+                }
+            );
+        }
+
+        // Modal functions
+        function showAlert(title, message, primaryBtnText = 'OK', secondaryBtnText = '', primaryCallback = null) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            
+            const primaryBtn = document.getElementById('modalPrimaryBtn');
+            const secondaryBtn = document.getElementById('modalSecondaryBtn');
+            
+            primaryBtn.textContent = primaryBtnText;
+            primaryBtn.onclick = () => {
+                closeModal();
+                if (primaryCallback) primaryCallback();
+            };
+            
+            if (secondaryBtnText) {
+                secondaryBtn.textContent = secondaryBtnText;
+                secondaryBtn.style.display = 'inline-block';
+                secondaryBtn.onclick = closeModal;
+            } else {
+                secondaryBtn.style.display = 'none';
+            }
+            
+            document.getElementById('alertModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('alertModal').style.display = 'none';
+        }
+
+        // Handle contact selection
+        function handleContactSelection() {
+            const selected = document.getElementById('contactSelect').value;
+            const newContactForm = document.getElementById('newContactForm');
+            
+            if (selected === 'custom') {
+                newContactForm.style.display = 'flex';
+            } else {
+                newContactForm.style.display = 'none';
+            }
+        }
+
+        // Event listeners
+        window.onload = function() {
+            initMap();
+            
+            // Refresh location button
+            document.getElementById('refreshLocation').addEventListener('click', getLocation);
+            
+            // Tracking buttons
+            document.getElementById('startTracking').addEventListener('click', startTracking);
+            document.getElementById('stopTracking').addEventListener('click', stopTracking);
+            
+            // Share location buttons
+            document.getElementById('shareLocationSMS').addEventListener('click', shareLocationSMS);
+            document.getElementById('shareLocationWhatsApp').addEventListener('click', shareLocationWhatsApp);
+            document.getElementById('copyLocationLink').addEventListener('click', copyLocationLink);
+            
+            // SOS button
+            document.getElementById('panicButton').addEventListener('click', triggerSOS);
+            
+            // Contact selection
+            document.getElementById('contactSelect').addEventListener('change', handleContactSelection);
+            
+            // Modal close button
+            document.querySelector('.close-modal').addEventListener('click', closeModal);
+            
+            // Mock save contact
+            document.getElementById('saveContact').addEventListener('click', function() {
+                const name = document.getElementById('contactName').value;
+                const number = document.getElementById('contactNumber').value;
+                
+                if (name && number) {
+                    const select = document.getElementById('contactSelect');
+                    const option = document.createElement('option');
+                    option.value = 'new_' + Date.now();
+                    option.text = name;
+                    select.add(option, 0);
+                    select.selectedIndex = 0;
+                    
+                    document.getElementById('contactName').value = '';
+                    document.getElementById('contactNumber').value = '';
+                    document.getElementById('newContactForm').style.display = 'none';
+                    
+                    showAlert('Contact Saved', `${name} has been added to your emergency contacts.`);
+                } else {
+                    showAlert('Missing Information', 'Please enter both name and number for your contact.');
+                }
+            });
+            
+            // Safe zone buttons (mock functionality)
+            document.getElementById('addSafeZone').addEventListener('click', function() {
+                showAlert('Add Safe Zone', 'This feature will allow you to mark areas as safe zones. Coming soon!');
+            });
+            
+            document.getElementById('viewSafeZones').addEventListener('click', function() {
+                showAlert('Safe Zones', 'You have not set up any safe zones yet. Use the "Add Safe Zone" button to create one.');
+            });
+        };
+    </script>
+</body>
+</html>

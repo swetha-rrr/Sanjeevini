@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Resources</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-heart"></i> Support Resources</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="{{ url_for('laws') }}"><i class="fas fa-gavel"></i> Laws</a></li>
+                    <li><a href="{{ url_for('news') }}"><i class="fas fa-newspaper"></i> News</a></li>
+                    <li><a href="{{ url_for('resources') }}" class="active"><i class="fas fa-hands-helping"></i> Resources</a></li>
+                    <li><a href="{{ url_for('safety_tips') }}"><i class="fas fa-shield-alt"></i> Safety Tips</a></li>
+                    <li><a href="{{ url_for('tracker') }}"><i class="fas fa-map-marker-alt"></i> GPS Tracker</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="resources-grid">
+            <div class="page-intro">
+                <h2>Finding Help When You Need It</h2>
+                <p>We've assembled a comprehensive collection of support services and organizations dedicated to women's safety and wellbeing. Whether you're in an emergency situation or looking for ongoing support, these resources are here to help.</p>
+            </div>
+
+            <section class="resource-section helplines">
+                <h2><i class="fas fa-phone-alt"></i> Emergency Helplines</h2>
+                <div class="helpline-cards">
+                    <div class="helpline-card">
+                        <div class="card-icon">
+                            <i class="fas fa-female"></i>
+                        </div>
+                        <h3>Women's Helpline</h3>
+                        <p class="helpline-number">1091</p>
+                        <p>24/7 national helpline for women in distress. Immediate assistance available in multiple languages.</p>
+                        <a href="tel:1091" class="call-now"><i class="fas fa-phone"></i> Call Now</a>
+                    </div>
+                    <div class="helpline-card">
+                        <div class="card-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <h3>Domestic Violence</h3>
+                        <p class="helpline-number">181</p>
+                        <p>For reporting domestic violence cases and getting immediate intervention and protection.</p>
+                        <a href="tel:181" class="call-now"><i class="fas fa-phone"></i> Call Now</a>
+                    </div>
+                    <div class="helpline-card">
+                        <div class="card-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Police Emergency</h3>
+                        <p class="helpline-number">100</p>
+                        <p>For immediate police assistance in emergency situations requiring urgent intervention.</p>
+                        <a href="tel:100" class="call-now"><i class="fas fa-phone"></i> Call Now</a>
+                    </div>
+                    <div class="helpline-card">
+                        <div class="card-icon">
+                            <i class="fas fa-ambulance"></i>
+                        </div>
+                        <h3>Ambulance</h3>
+                        <p class="helpline-number">108</p>
+                        <p>For medical emergencies requiring immediate medical attention and transportation.</p>
+                        <a href="tel:108" class="call-now"><i class="fas fa-phone"></i> Call Now</a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="resource-section organizations">
+                <h2><i class="fas fa-building"></i> Support Organizations</h2>
+                <div class="org-cards">
+                    <div class="org-card">
+                        <h3>National Commission for Women</h3>
+                        <p>Government body dedicated to protecting and promoting women's interests and rights. Provides legal assistance, policy advocacy, and grievance resolution.</p>
+                        <a href="http://ncw.nic.in/" target="_blank" class="org-link"><i class="fas fa-external-link-alt"></i> Visit Website</a>
+                    </div>
+                    <div class="org-card">
+                        <h3>Shakti Shalini</h3>
+                        <p>NGO supporting survivors of gender-based violence through legal aid, counseling, shelter, and rehabilitation services. Available 24/7 for crisis intervention.</p>
+                        <a href="https://shaktishalini.org/" target="_blank" class="org-link"><i class="fas fa-external-link-alt"></i> Visit Website</a>
+                    </div>
+                    <div class="org-card">
+                        <h3>All India Women's Conference</h3>
+                        <p>Works for women's education, social welfare, and empowerment through various programs including legal awareness camps and vocational training.</p>
+                        <a href="https://aiwc.org.in/" target="_blank" class="org-link"><i class="fas fa-external-link-alt"></i> Visit Website</a>
+                    </div>
+
+                </div>
+            </section>
+            
+            <section class="resource-section additional-help">
+                <h2><i class="fas fa-life-ring"></i> Additional Support Services</h2>
+                <div class="org-cards">
+                    <div class="org-card">
+                        <h3>Legal Aid Services</h3>
+                        <p>Free legal assistance for women facing violence, harassment, or discrimination. Includes consultation, document preparation, and court representation.</p>
+                        <a href="#" class="org-link"><i class="fas fa-balance-scale"></i> Find Legal Help</a>
+                    </div>
+                    <div class="org-card">
+                        <h3>Safe Shelters Network</h3>
+                        <p>Emergency accommodation for women and children fleeing dangerous situations. Provides food, clothing, and connections to long-term support.</p>
+                        <a href="#" class="org-link"><i class="fas fa-house-user"></i> Locate Shelters</a>
+                    </div>
+                    <div class="org-card">
+                        <h3>Counseling Services</h3>
+                        <p>Professional mental health support specialized in trauma, abuse recovery, and building resilience. Available both online and in-person.</p>
+                        <a href="#" class="org-link"><i class="fas fa-comment-medical"></i> Get Counseling</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Women Safety App. All rights reserved.</p>
+        <div class="emergency-footer">
+            <p>In immediate danger? Call <strong>100</strong> or <strong>1091</strong> now</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        // Simple animation to make cards appear with slight delay
+        $(document).ready(function() {
+            $('.helpline-card, .org-card').css('opacity', '0');
+            
+            setTimeout(function() {
+                $('.helpline-card, .org-card').each(function(index) {
+                    var card = $(this);
+                    setTimeout(function() {
+                        card.css('opacity', '1');
+                    }, 100 * index);
+                });
+            }, 300);
+        });
+    </script>
+</body>
+</html>

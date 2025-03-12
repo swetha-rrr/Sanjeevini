@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latest News</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Latest News</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="{{ url_for('laws') }}"><i class="fas fa-gavel"></i> Laws</a></li>
+                    <li><a href="{{ url_for('news') }}" class="active"><i class="fas fa-newspaper"></i> News</a></li>
+                    <li><a href="{{ url_for('resources') }}"><i class="fas fa-hands-helping"></i> Resources</a></li>
+                    <li><a href="{{ url_for('safety_tips') }}"><i class="fas fa-shield-alt"></i> Safety Tips</a></li>
+                    <li><a href="{{ url_for('tracker') }}"><i class="fas fa-map-marker-alt"></i> GPS Tracker</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="news-categories">
+            
+            <button class="category-btn" onclick="switchCategory('general')">General News</button>
+            <button class="category-btn" onclick="switchCategory('crime')">Crime News</button>
+            <button class="category-btn" onclick="switchCategory('health')">health</button>
+            <button class="category-btn" onclick="switchCategory('business')">business</button>
+        </div>
+
+        <div class="news-container">
+            <div id="news-loading">
+                <div class="loading-spinner"></div>
+                <p>Loading news...</p>
+            </div>
+            
+            <div id="news-content" class="news-list">
+                <!-- News will be displayed here -->
+            </div>
+            
+            <div id="news-error" class="error-message" style="display: none;">
+                <p>Unable to load news. Please try again later.</p>
+                <button onclick="fetchNewsByCategory(currentCategory)">Retry</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Women Safety App. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let currentCategory = 'women';
+
+        function switchCategory(category) {
+            // Update active button
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.category-btn[onclick="switchCategory('${category}')"]`).classList.add('active');
+            
+            // Fetch news for the selected category
+            currentCategory = category;
+            fetchNewsByCategory(category);
+        }
+
+        async function fetchNewsByCategory(category) {
+            // Show loading state
+            document.getElementById('news-loading').style.display = 'flex';
+            document.getElementById('news-content').style.display = 'none';
+            document.getElementById('news-error').style.display = 'none';
+            
+            try {
+                const response = await fetch(`/rss/${category}`);
+                const data = await response.json();
+                
+                // Hide loading state
+                document.getElementById('news-loading').style.display = 'none';
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                // Display news articles
+                const newsContent = document.getElementById('news-content');
+                newsContent.style.display = 'grid';
+                newsContent.innerHTML = '';
+                
+                if (data.articles.length === 0) {
+                    newsContent.innerHTML = '<p class="no-news">No news articles available at the moment.</p>';
+                    return;
+                }
+                
+                data.articles.forEach(article => {
+                    const articleElement = document.createElement('div');
+                    articleElement.className = 'news-article';
+                    
+                    // Format date if available
+                    let dateStr = '';
+                    if (article.publishedAt) {
+                        try {
+                            const date = new Date(article.publishedAt);
+                            dateStr = date.toLocaleDateString();
+                        } catch (e) {
+                            dateStr = article.publishedAt;
+                        }
+                    }
+                    
+                    // Create a safe description (truncated)
+                    let description = article.description || '';
+                    description = description.substring(0, 150) + (description.length > 150 ? '...' : '');
+                    
+                    // HTML for article
+                    let articleHTML = '<div class="article-content">';
+                    articleHTML += `<h3 class="article-title">${article.title}</h3>`;
+                    
+                    articleHTML += '<div class="article-meta">';
+                    if (article.source && article.source.name) {
+                        articleHTML += `<span><i class="fas fa-newspaper"></i> ${article.source.name}</span>`;
+                    }
+                    if (dateStr) {
+                        articleHTML += `<span><i class="far fa-calendar-alt"></i> ${dateStr}</span>`;
+                    }
+                    articleHTML += '</div>';
+                    
+                    articleHTML += `<p class="article-description">${description}</p>`;
+                    articleHTML += `<a href="${article.link}" target="_blank" class="read-more">Read Full Article <i class="fas fa-external-link-alt"></i></a>`;
+                    articleHTML += '</div>';
+                    
+                    // Add image if available (before the content)
+                    if (article.urlToImage) {
+                        articleElement.innerHTML = `<img src="${article.urlToImage}" alt="${article.title}" class="article-image">` + articleHTML;
+                    } else {
+                        articleElement.innerHTML = articleHTML;
+                    }
+                    
+                    newsContent.appendChild(articleElement);
+                });
+            } catch (error) {
+                console.error('Error fetching news:', error);
+                document.getElementById('news-loading').style.display = 'none';
+                document.getElementById('news-error').style.display = 'block';
+            }
+        }
+
+        // Initial fetch
+        window.onload = () => fetchNewsByCategory(currentCategory);
+    </script>
+</body>
+</html>

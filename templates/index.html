@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanjeevini</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Sanjeevini</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}" class="active"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="{{ url_for('laws') }}"><i class="fas fa-gavel"></i> Laws</a></li>
+                <li><a href="{{ url_for('news') }}"><i class="fas fa-newspaper"></i> News</a></li>
+                <li><a href="{{ url_for('resources') }}"><i class="fas fa-hands-helping"></i> Resources</a></li>
+                <li><a href="{{ url_for('safety_tips') }}"><i class="fas fa-shield-alt"></i> Safety Tips</a></li>
+                <li><a href="{{ url_for('tracker') }}"><i class="fas fa-map-marker-alt"></i> GPS Tracker</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="hero-section">
+        <img src="{{ url_for('static', filename='1.jpeg') }}" alt="Women Safety" class="hero-image">
+        <div class="hero-content">
+           
+            </div>
+        </div>
+    </div>
+
+    <div class="content-container">
+        <!-- Legal Information -->
+        <div class="feature-row">
+            <div class="feature-image">
+                <img src="{{ url_for('static', filename='law.jpeg') }}" alt="Legal Information">
+            </div>
+            <div class="feature-content">
+                <i class="fas fa-gavel"></i>
+                <h3>Legal Information</h3>
+                <p>Access information about laws protecting women's rights and safety.</p>
+                <a href="{{ url_for('laws') }}" class="card-link">View Laws</a>
+            </div>
+        </div>
+
+        <!-- News -->
+        <div class="feature-row">
+            <div class="feature-image">
+                <img src="{{ url_for('static', filename='news.jpeg') }}" alt="Latest News">
+            </div>
+            <div class="feature-content">
+                <i class="fas fa-newspaper"></i>
+                <h3>Latest News</h3>
+                <p>Stay updated with news related to women's safety and rights.</p>
+                <a href="{{ url_for('news') }}" class="card-link">Read News</a>
+            </div>
+        </div>
+
+        <!-- Safety Resources -->
+        <div class="feature-row">
+            <div class="feature-image">
+                <img src="{{ url_for('static', filename='safety.jpeg') }}" alt="Safety Resources">
+            </div>
+            <div class="feature-content">
+                <i class="fas fa-hands-helping"></i>
+                <h3>Safety Resources</h3>
+                <p>Find resources and support services for women in need.</p>
+                <a href="{{ url_for('resources') }}" class="card-link">Find Help</a>
+            </div>
+        </div>
+
+        <!-- GPS Tracker -->
+        <div class="feature-row">
+            <div class="feature-image">
+                <img src="{{ url_for('static', filename='gps.jpeg') }}" alt="GPS Tracker">
+            </div>
+            <div class="feature-content">
+                <i class="fas fa-map-marker-alt"></i>
+                <h3>GPS Tracker</h3>
+                <p>Share your location with trusted contacts in emergency situations.</p>
+                <a href="{{ url_for('tracker') }}" class="card-link">Track Location</a>
+            </div>
+        </div>
+
+        <div class="emergency-section">
+            <h2>Emergency Contacts</h2>
+            <div class="emergency-contacts" id="emergency-contacts">
+                <!-- Will be filled dynamically -->
+                <div class="contact-card">
+                    <h3>Women's Helpline</h3>
+                    <p>1091</p>
+                    <a href="tel:1091" class="call-btn">Call Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Women Safety App. All rights reserved.</p>
+    </footer>
+
+    <script>
+        async function loadEmergencyContacts() {
+            try {
+                const response = await fetch('/api/emergency_contacts');
+                const data = await response.json();
+                const contactsContainer = document.getElementById('emergency-contacts');
+                
+                contactsContainer.innerHTML = '';
+                
+                data.contacts.forEach(contact => {
+                    contactsContainer.innerHTML += `
+                        <div class="contact-card">
+                            <h3>${contact.name}</h3>
+                            <p>${contact.number}</p>
+                            <a href="tel:${contact.number}" class="call-btn">Call Now</a>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error('Failed to load emergency contacts:', error);
+            }
+        }
+
+        window.onload = loadEmergencyContacts;
+    </script>
+</body>
+</html>

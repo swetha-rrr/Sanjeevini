@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safety Tips & Self-Defense</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Enhanced styles for Safety Tips page */
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            padding: 1.5rem 0;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(142, 68, 173, 0.1);
+            margin-bottom: 2rem;
+            border-radius: 0 0 12px 12px;
+        }
+        
+        header h1 {
+            color: #7d3c98;
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 0;
+        }
+        
+        nav a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            transition: all 0.3s;
+        }
+        
+        nav a i {
+            margin-right: 0.5rem;
+        }
+        
+        nav a:hover {
+            background-color: rgba(142, 68, 173, 0.1);
+            color: #8e44ad;
+            text-decoration: none;
+            transform: translateY(-3px);
+        }
+        
+        nav a.active {
+            color: #fff;
+            background-color: #8e44ad;
+            box-shadow: 0 4px 8px rgba(142, 68, 173, 0.2);
+        }
+        
+        .safety-intro {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding: 2rem;
+            background: linear-gradient(145deg, #ffffff, #f8f5fb);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(142, 68, 173, 0.1);
+            border-top: 5px solid #8e44ad;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .safety-intro h2 {
+            color: #6c3483;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        .safety-intro h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, #8e44ad, #a569bd);
+            border-radius: 2px;
+        }
+        
+        .safety-intro p {
+            color: #555;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .safety-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+        
+        @media (min-width: 992px) {
+            .safety-grid {
+                grid-template-columns: 3fr 2fr;
+            }
+        }
+        
+        .safety-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(142, 68, 173, 0.1);
+            padding: 2rem;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        
+        .safety-section:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(142, 68, 173, 0.2);
+        }
+        
+        .safety-section h2 {
+            color: #6c3483;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            position: relative;
+            text-align: center;
+        }
+        
+        .safety-section h2 i {
+            margin-right: 0.8rem;
+            color: #8e44ad;
+        }
+        
+        .safety-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, #8e44ad, #a569bd);
+            border-radius: 2px;
+        }
+        
+        .tips-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .tip-card {
+            background: linear-gradient(145deg, #ffffff, #f8f5fb);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid #8e44ad;
+        }
+        
+        .tip-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(142, 68, 173, 0.12);
+        }
+        
+        .tip-card h3 {
+            color: #6c3483;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid rgba(142, 68, 173, 0.1);
+            position: relative;
+        }
+        
+        .tip-card h3::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #8e44ad;
+        }
+        
+        .tip-card ul {
+            padding-left: 1.2rem;
+            margin-top: 1rem;
+        }
+        
+        .tip-card li {
+            margin-bottom: 0.8rem;
+            color: #555;
+            line-height: 1.5;
+            position: relative;
+        }
+        
+        .tip-card li::before {
+            content: '•';
+            color: #8e44ad;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+        
+        .self-defense-content {
+            padding: 1rem;
+        }
+        
+        .self-defense-content p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+        
+        .video-resources, .classes-info {
+            background: linear-gradient(145deg, #ffffff, #f8f5fb);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 4px solid #8e44ad;
+        }
+        
+        .video-resources:hover, .classes-info:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(142, 68, 173, 0.12);
+        }
+        
+        .video-resources h3, .classes-info h3 {
+            color: #6c3483;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid rgba(142, 68, 173, 0.1);
+            position: relative;
+        }
+        
+        .video-resources h3::after, .classes-info h3::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #8e44ad;
+        }
+        
+        .video-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .video-link {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            color: #6c3483;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .video-link:hover {
+            background-color: #8e44ad;
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 6px 15px rgba(142, 68, 173, 0.2);
+        }
+        
+        .video-link i {
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        footer {
+            background: linear-gradient(to right, #6c3483, #8e44ad);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 3rem;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 12px 12px 0 0;
+        }
+        
+        /* Animation for cards */
+        .tip-card, .video-resources, .classes-info {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .tip-card:nth-child(1) { animation-delay: 0.1s; }
+        .tip-card:nth-child(2) { animation-delay: 0.2s; }
+        .tip-card:nth-child(3) { animation-delay: 0.3s; }
+        .tip-card:nth-child(4) { animation-delay: 0.4s; }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Safety Tips & Self-Defense</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="{{ url_for('laws') }}"><i class="fas fa-gavel"></i> Laws</a></li>
+                    <li><a href="{{ url_for('news') }}"><i class="fas fa-newspaper"></i> News</a></li>
+                    <li><a href="{{ url_for('resources') }}"><i class="fas fa-hands-helping"></i> Resources</a></li>
+                    <li><a href="{{ url_for('safety_tips') }}" class="active"><i class="fas fa-shield-alt"></i> Safety Tips</a></li>
+                    <li><a href="{{ url_for('tracker') }}"><i class="fas fa-map-marker-alt"></i> GPS Tracker</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="safety-intro">
+            <h2>Personal Safety Guidelines</h2>
+            <p>Learn essential safety practices and self-defense techniques to protect yourself in various situations.</p>
+        </section>
+
+        <div class="safety-grid">
+            <section class="safety-section safety-tips">
+                <h2><i class="fas fa-shield-alt"></i> Safety Tips</h2>
+                <div class="tips-container">
+                    <div class="tip-card">
+                        <h3>Personal Safety</h3>
+                        <ul>
+                            <li>Always keep emergency contacts saved and easily accessible</li>
+                            <li>Share your location with trusted friends or family when traveling</li>
+                            <li>Use our GPS tracker when in unfamiliar areas</li>
+                            <li>Consider carrying a personal safety device or whistle</li>
+                            <li>Be aware of your surroundings and trust your instincts</li>
+                        </ul>
+                    </div>
+                    <div class="tip-card">
+                        <h3>Commuting Safety</h3>
+                        <ul>
+                            <li>Use registered public transport or verified cab services</li>
+                            <li>Check if the vehicle and driver details match before boarding</li>
+                            <li>Share your trip details with someone you trust</li>
+                            <li>Avoid isolated routes, especially after dark</li>
+                            <li>Keep your phone charged and accessible</li>
+                        </ul>
+                    </div>
+                    <div class="tip-card">
+                        <h3>Digital Safety</h3>
+                        <ul>
+                            <li>Use strong passwords and enable two-factor authentication</li>
+                            <li>Be cautious about sharing personal information online</li>
+                            <li>Review privacy settings on social media regularly</li>
+                            <li>Report online harassment immediately</li>
+                            <li>Be careful with location sharing on apps and social media</li>
+                        </ul>
+                    </div>
+                    <div class="tip-card">
+                        <h3>Workplace Safety</h3>
+                        <ul>
+                            <li>Familiarize yourself with workplace sexual harassment policies</li>
+                            <li>Know your rights and the reporting procedures</li>
+                            <li>Document inappropriate incidents or behaviors</li>
+                            <li>Support colleagues who report harassment</li>
+                            <li>Contact the Internal Complaints Committee if needed</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="safety-section self-defense">
+                <h2><i class="fas fa-fist-raised"></i> Self-Defense Resources</h2>
+                <div class="self-defense-content">
+                    <p>Learning self-defense techniques can provide confidence and potentially help in threatening situations.</p>
+                    <div class="video-resources">
+                        <h3>Educational Videos</h3>
+                        <div class="video-links">
+                            <a href="https://www.youtube.com/results?search_query=women+self+defense+basics" target="_blank" class="video-link">
+                                <i class="fab fa-youtube"></i> Basic Self-Defense Techniques
+                            </a>
+                            <a href="https://www.youtube.com/results?search_query=women+situational+awareness" target="_blank" class="video-link">
+                                <i class="fab fa-youtube"></i> Situational Awareness Training
+                            </a>
+                            <a href="https://www.youtube.com/results?search_query=pepper+spray+usage+guide" target="_blank" class="video-link">
+                                <i class="fab fa-youtube"></i> Safety Device Usage Guides
+                            </a>
+                        </div>
+                    </div>
+                    <div class="classes-info">
+                        <h3>Find Self-Defense Classes</h3>
+                        <p>Many organizations offer women's self-defense classes. Check local community centers, gyms, and women's organizations for programs near you.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Women Safety App. All rights reserved.</p>
+    </footer>
+</body>
+</html>

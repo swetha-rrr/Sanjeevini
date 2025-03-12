@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Women's Legal Rights</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Women's Legal Rights</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="{{ url_for('laws') }}" class="active"><i class="fas fa-gavel"></i> Laws</a></li>
+                    <li><a href="{{ url_for('news') }}"><i class="fas fa-newspaper"></i> News</a></li>
+                    <li><a href="{{ url_for('resources') }}"><i class="fas fa-hands-helping"></i> Resources</a></li>
+                    <li><a href="{{ url_for('safety_tips') }}"><i class="fas fa-shield-alt"></i> Safety Tips</a></li>
+                    <li><a href="{{ url_for('tracker') }}"><i class="fas fa-map-marker-alt"></i> GPS Tracker</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="laws-section">
+            <h2>Key Laws Protecting Women in India</h2>
+            
+            <div class="laws-container">
+                <div class="law-box">
+                    <h3>Protection of Women from Domestic Violence Act, 2005</h3>
+                    <p>Provides protection against physical, sexual, verbal, emotional, and economic abuse in domestic relationships.</p>
+                    <div class="law-details">
+                        <ul>
+                            <li>Covers women in all domestic relationships</li>
+                            <li>Provides for Protection Officers and service providers</li>
+                            <li>Offers protection, residence, custody, and compensation orders</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="law-box">
+                    <h3>Sexual Harassment at Workplace Act, 2013</h3>
+                    <p>Protects women from sexual harassment in workplaces and establishes mechanisms for redressal.</p>
+                    <div class="law-details">
+                        <ul>
+                            <li>Mandates Internal Complaints Committee in organizations</li>
+                            <li>Covers both organized and unorganized sectors</li>
+                            <li>Includes provisions for conciliation and inquiry</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="law-box">
+                    <h3>Dowry Prohibition Act, 1961</h3>
+                    <p>Prohibits the giving or taking of dowry and penalizes demands for dowry.</p>
+                    <div class="law-details">
+                        <ul>
+                            <li>Makes demanding dowry a punishable offense</li>
+                            <li>Provides for penalties including imprisonment</li>
+                            <li>Includes provisions for dowry prohibition officers</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="law-box">
+                    <h3>Maternity Benefit Act, 1961 (Amended 2017)</h3>
+                    <p>Provides for paid maternity leave and other benefits to women employees during pregnancy and after childbirth.</p>
+                    <div class="law-details">
+                        <ul>
+                            <li>Grants 26 weeks of paid maternity leave</li>
+                            <li>Includes work-from-home options</li>
+                            <li>Mandates crèche facilities in establishments</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="law-box">
+                    <h3>Equal Remuneration Act, 1976</h3>
+                    <p>Mandates equal pay for men and women for equal work and prevents discrimination in recruitment.</p>
+                    <div class="law-details">
+                        <ul>
+                            <li>Prohibits gender discrimination in recruitment</li>
+                            <li>Ensures equal pay for equal work</li>
+                            <li>Provides for advisory committees and authorities</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="chatbot-section">
+            <h2>Have Questions About Your Legal Rights?</h2>
+            <p>Ask our legal assistant for more information about women's rights and legal protections.</p>
+            
+            <div class="chatbot-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="system-message">
+                        Hello! I can answer your questions about women's legal rights and protections in India. What would you like to know?
+                    </div>
+                </div>
+                
+                <div class="chat-input">
+                    <input type="text" id="queryInput" placeholder="Type your question here..." autocomplete="off">
+                    <button id="sendButton" onclick="askQuestion()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Women Safety App. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function addMessage(text, isUser) {
+            const chatMessages = document.getElementById("chatMessages");
+            const messageDiv = document.createElement("div");
+            messageDiv.className = isUser ? "user-message" : "bot-message";
+            messageDiv.textContent = text;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        async function askQuestion() {
+            const inputField = document.getElementById("queryInput");
+            const question = inputField.value.trim();
+            
+            if (!question) return;
+            
+            // Add user question to chat
+            addMessage(question, true);
+            inputField.value = "";
+            
+            try {
+                // Show typing indicator
+                const chatMessages = document.getElementById("chatMessages");
+                const typingDiv = document.createElement("div");
+                typingDiv.className = "typing-indicator";
+                typingDiv.innerHTML = "<span></span><span></span><span></span>";
+                chatMessages.appendChild(typingDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Send request to server
+                const response = await fetch("/query", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ question: question }),
+                });
+                
+                const data = await response.json();
+                
+                // Remove typing indicator
+                chatMessages.removeChild(typingDiv);
+                
+                // Add bot response
+                addMessage(data.response, false);
+            } catch (error) {
+                console.error("Error:", error);
+                addMessage("Sorry, I couldn't process your question. Please try again.", false);
+            }
+        }
+
+        // Allow sending message with Enter key
+        document.getElementById("queryInput").addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                askQuestion();
+            }
+        });
+    </script>
+</body>
+</html>
